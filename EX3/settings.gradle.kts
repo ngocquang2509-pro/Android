@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SumCalculatorApp"
+rootProject.name = "Project_Cal"
 include(":app")
+ 

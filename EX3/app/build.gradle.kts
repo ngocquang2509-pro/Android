@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sumcalculatorapp"
+    namespace = "com.example.project_cal"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.sumcalculatorapp"
+        applicationId = "com.example.project_cal"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
