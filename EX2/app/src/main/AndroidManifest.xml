@@ -13,9 +13,12 @@
         android:theme="@style/Theme.Demor_Cyclefile"
         tools:targetApi="31">
         <activity
-            android:name=".Subactivity"
-            android:theme="@style/Theme.AppCompat.Dialog"
+            android:name=".SecondActivity"
             android:exported="false" />
+        <activity
+            android:name=".Subactivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

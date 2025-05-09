@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    // Khai báo các phần tử giao diện
     EditText edtF, edtC;
     Button btnToC, btnToF,btnClear;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        //Tham chiếu thuộc tính tới các phần tử giao diện
         edtF = findViewById(R.id.edtF);
         edtC = findViewById(R.id.edtC);
         btnToC = findViewById(R.id.btnToC);
