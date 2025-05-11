@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.convertcalender"
+    namespace = "com.example.convertcalendar"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.convertcalender"
+        applicationId = "com.example.convertcalendar"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ConvertCalender"
+rootProject.name = "ConvertCalendar"
 include(":app")
- 

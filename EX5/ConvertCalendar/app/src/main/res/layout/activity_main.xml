@@ -1,64 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
-
-    <!-- Tiêu đề -->
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="wrap_content" tools:context=".MainActivity">
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#4CAF50"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Chuyển đổi năm dương lịch"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-    <!-- Nhập năm dương lịch -->
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Năm dương lịch:"
-            android:paddingEnd="8dp" />
-
-        <EditText
-            android:id="@+id/editTextYear"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="number"
-            android:hint="2024" />
+            android:background="#0F6613"
+            android:text="Chuyển đổi năm dương lịch"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
     </TableRow>
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:id="@+id/textView3" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Năm dương lịch" android:textSize="18sp"/>
 
-    <!-- Nút chuyển đổi -->
+        <EditText
+            android:id="@+id/edtCalendarYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ems="10"
+            android:inputType="text"
+            android:textSize="20sp" />
+    </TableRow>
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
+        <Button
+            android:id="@+id/btnConvert"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/buttonConvert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chuyển đổi"
-            android:background="#DDDDDD" />
+            android:layout_marginStart="138dp"
+            android:layout_weight="2"
+            android:text="Chuyển đổi" />
     </TableRow>
 
-    <!-- Kết quả âm lịch
+
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:id="@+id/textView4" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Năm âm lịch" android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvLunarYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="#FFEB3B"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0F6613" />
+</TableLayout>

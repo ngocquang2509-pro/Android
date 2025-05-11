@@ -1,4 +1,4 @@
-package com.example.convertcalender;
+package com.example.convertcalendar;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.convertcalender", appContext.getPackageName());
+        assertEquals("com.example.convertcalendar", appContext.getPackageName());
     }
 }

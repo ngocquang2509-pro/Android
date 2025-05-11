@@ -1,4 +1,4 @@
-package com.example.convertcalender;
+package com.example.convertcalendar;
 
 import org.junit.Test;
 
