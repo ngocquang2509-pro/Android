@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="Bai11_listview2"
+        app:titleTextColor="#EFE4E4" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#7CD97F"
+        android:lineSpacingExtra="24sp"
+        android:text="Điện thoại được chọn"
+        android:textAlignment="center"
+        android:textColor="#161615"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/lvPhones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
