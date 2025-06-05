@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:padding="12dp"
+android:gravity="center_vertical">
+
+<!-- Mã số bài hát -->
+<TextView
+    android:id="@+id/txtMaso"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="52300"
+    android:textColor="#2196F3"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:layout_marginEnd="12dp" />
+
+<!-- Tên bài hát -->
+<TextView
+    android:id="@+id/txtTenBai"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="Em là ai Tôi là ai"
+    android:textColor="#333333"
+    android:textSize="14sp" />
+
+<!-- Icon cảnh báo -->
+<ImageView
+    android:id="@+id/imgWarning"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:src="@drawable/ic_warning"
+    android:layout_marginEnd="8dp" />
+
+<!-- Icon tim yêu thích -->
+<ImageView
+    android:id="@+id/imgHeart"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:src="@drawable/ic_heart"
+    android:tint="#F44336" />
+
+</LinearLayout>
