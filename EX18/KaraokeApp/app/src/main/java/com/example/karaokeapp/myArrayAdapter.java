@@ -1,3 +1,5 @@
+package com.example.karaokeapp;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast; // Assuming Toast might be used for debugging or user feedback, not directly in the provided code but common.
 
+import com.example.karaokeapp.ActivitySub;
 import com.example.karaokeapp.Item;
+import com.example.karaokeapp.MainActivity;
+import com.example.karaokeapp.R;
 
 import java.util.ArrayList;
 
@@ -37,14 +42,14 @@ public class myArrayAdapter extends ArrayAdapter<Item> {
         convertView = inflater.inflate(layoutId, null);
 
         final Item myItem = myArray.get(position);
-        final TextView tieude = (TextView) convertView.findViewById(R.id.txttieude);
+        final TextView tieude = (TextView) convertView.findViewById(R.id.txtbaihat);
         tieude.setText(myItem.getTieude());
 
         final TextView maso = (TextView) convertView.findViewById(R.id.txtmaso);
         maso.setText(myItem.getMaso());
 
-        final ImageView btnlike = (ImageView) convertView.findViewById(R.id.btnlike);
-        final ImageView btnunlike = (ImageView) convertView.findViewById(R.id.btnunlike);
+        final ImageView btnlike = (ImageView) convertView.findViewById(R.id.btnthich);
+        final ImageView btnunlike = (ImageView) convertView.findViewById(R.id.btnkhongthich);
 
         int thich = myItem.getThich();
 
@@ -81,7 +86,7 @@ public class myArrayAdapter extends ArrayAdapter<Item> {
             public void onClick(View view) {
                 ContentValues values = new ContentValues();
                 values.put("THICH", 0);
-                MainAcitivity.database.update("AriRangSongList", values,
+                MainActivity.database.update("AriRangSongList", values,
                         "MABH=?", new String[]{maso.getText().toString()});
                 btnlike.setVisibility(View.VISIBLE);
                 btnunlike.setVisibility(View.INVISIBLE);
@@ -101,7 +106,7 @@ public class myArrayAdapter extends ArrayAdapter<Item> {
                 // TODO Auto-generated method stub
                 tieude.setTextColor(Color.RED);
                 maso.setTextColor(Color.RED);
-                Intent intent1 = new Intent(context, activitysub.class);
+                Intent intent1 = new Intent(context, ActivitySub.class);
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("maso", maso.getText().toString());
                 intent1.putExtras(bundle1);
