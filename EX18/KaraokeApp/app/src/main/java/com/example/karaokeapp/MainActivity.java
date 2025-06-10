@@ -1,262 +1,311 @@
 package com.example.karaokeapp;
+
+import android.app.Activity;
+import android.app.TabActivity; // Sử dụng TabActivity theo hướng dẫn PDF
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity; // Assuming AppCompatActivity is used
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TabActivity { // Sử dụng TabActivity
 
-    public static final String DB_PATH_SUFFIX = "/databases/";
     public static SQLiteDatabase database = null;
-    public static String DATABASE_NAME = "arirang.sqlite";
+    public static String DATABASE_NAME = "Arirang.sqlite";
+    String DB_PATH_SUFFIX = "/databases/";
 
-    EditText edttim;
-    ListView lv1, lv2, lv3;
-    ArrayList<Item> list1, list2, list3;
-    myArrayAdapter myarray1, myarray2, myarray3;
-    TabHost tab;
-    ImageButton btnxoa; // Added based on btnxoa.setOnClickListener
+    TabHost tabHost;
+
+    EditText edtTimKiem;
+    ListView lvBaiHatTimKiem;
+    ArrayList<BaiHat> dsBaiHatTimKiem;
+    AdapterBaiHat adapterBaiHatTimKiem;
+
+    ListView lvToanBoBaiHat;
+    ArrayList<BaiHat> dsToanBoBaiHat;
+    AdapterBaiHat adapterToanBoBaiHat;
+
+    ListView lvBaiHatYeuThich;
+    ArrayList<BaiHat> dsBaiHatYeuThich;
+    AdapterBaiHat adapterBaiHatYeuThich;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Assuming your main layout is activity_main.xml
+        setContentView(R.layout.activity_main);
 
-        // preprocess() // This line is commented out in the image, but the method is defined.
-        copyProcess(); // Calls the method to copy the database
-        // Mô số dữ liệu để copy. Lấy vào biến database
-        // (Some data to copy. Get into database variable)
+        xuLySaoChepCSDLTuAssetsVaoHeThong();
         database = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 
-        addControls(); // Hàm thêm các controls (Method to add controls)
-        addTim(); // Xử lý công việc tìm kiếm (Handle search task)
-        addEvents(); // Xử lý sự kiện khi chuyển Tab và các sự kiện khác (Handle tab change and other events)
+        setupTabHost();
+        addControls();
+        loadData();
+        addEvents();
     }
 
-    // Hàm khai báo và Add các Controls vào giao diện
-    // (Method to declare and Add Controls to UI)
-    // Trên 3 Tab chúng ta có 3 Listview ứng với 3 Danh sách dữ liệu (Dữ liệu tìm kiếm, Danh sách bài hát gốc, Danh sách bài hát yêu thích) và Adapter riêng
-    // (On 3 Tabs we have 3 Listviews corresponding to 3 Data Lists (Search data, Original song list, Favorite song list) and separate Adapters)
+    private void setupTabHost() {
+        tabHost = getTabHost(); // Lấy TabHost từ TabActivity
+
+        TabHost.TabSpec tabTimKiem = tabHost.newTabSpec("t1");
+        tabTimKiem.setIndicator("", getResources().getDrawable(R.drawable.ic_tab_search));
+        tabTimKiem.setContent(R.id.tab_tim_kiem);
+        tabHost.addTab(tabTimKiem);
+
+        TabHost.TabSpec tabDanhSach = tabHost.newTabSpec("t2");
+        tabDanhSach.setIndicator("", getResources().getDrawable(R.drawable.ic_tab_list));
+        tabDanhSach.setContent(R.id.tab_danh_sach);
+        tabHost.addTab(tabDanhSach);
+
+        TabHost.TabSpec tabYeuThich = tabHost.newTabSpec("t3");
+        tabYeuThich.setIndicator("", getResources().getDrawable(R.drawable.ic_tab_favorite));
+        tabYeuThich.setContent(R.id.tab_yeu_thich);
+        tabHost.addTab(tabYeuThich);
+    }
+
     private void addControls() {
-        // TODO Auto-generated method stub
-        btnxoa = (ImageButton) findViewById(R.id.btnXoa);
-        tab = (TabHost) findViewById(R.id.tabhost);
-        tab.setup();
+        edtTimKiem = findViewById(R.id.edtTimKiem);
+        lvBaiHatTimKiem = findViewById(R.id.lvBaiHatTimKiem);
+        dsBaiHatTimKiem = new ArrayList<>();
+        adapterBaiHatTimKiem = new AdapterBaiHat(MainActivity.this, R.layout.item_bai_hat, dsBaiHatTimKiem);
+        lvBaiHatTimKiem.setAdapter(adapterBaiHatTimKiem);
 
-        TabHost.TabSpec tab1 = tab.newTabSpec("t1");
-        tab1.setContent(R.id.tab1);
-        // Cung cấp một chuỗi không rỗng, ví dụ: "Tìm kiếm"
-        tab1.setIndicator("Tìm kiếm", getResources().getDrawable(R.drawable.ic_launcher_foreground));
-        tab.addTab(tab1);
+        lvToanBoBaiHat = findViewById(R.id.lvToanBoBaiHat);
+        dsToanBoBaiHat = new ArrayList<>();
+        adapterToanBoBaiHat = new AdapterBaiHat(MainActivity.this, R.layout.item_bai_hat, dsToanBoBaiHat);
+        lvToanBoBaiHat.setAdapter(adapterToanBoBaiHat);
 
-        TabHost.TabSpec tab2 = tab.newTabSpec("t2");
-        tab2.setContent(R.id.tab2);
-        // Cung cấp một chuỗi không rỗng, ví dụ: "Danh sách"
-        tab2.setIndicator("Danh sách", getResources().getDrawable(R.drawable.ic_launcher_foreground));
-        tab.addTab(tab2);
-
-        TabHost.TabSpec tab3 = tab.newTabSpec("t3");
-        tab3.setContent(R.id.tab3);
-        // Cung cấp một chuỗi không rỗng, ví dụ: "Yêu thích"
-        tab3.setIndicator("Yêu thích", getResources().getDrawable(R.drawable.ic_launcher_foreground));
-        tab.addTab(tab3);
-
-        edttim = (EditText) findViewById(R.id.edtTim);
-
-        lv1 = (ListView) findViewById(R.id.lv1);
-        lv2 = (ListView) findViewById(R.id.lv2);
-        lv3 = (ListView) findViewById(R.id.lv3);
-
-        list1 = new ArrayList<Item>();
-        list2 = new ArrayList<Item>();
-        list3 = new ArrayList<Item>();
-
-        myarray1 = new myArrayAdapter(MainActivity.this, R.layout.listitem, list1);
-        lv1.setAdapter(myarray1);
-
-        myarray2 = new myArrayAdapter(MainActivity.this, R.layout.listitem, list2);
-        lv2.setAdapter(myarray2);
-
-        myarray3 = new myArrayAdapter(MainActivity.this, R.layout.listitem, list3);
-        lv3.setAdapter(myarray3);
-
-        addDanhsach();
-
+        lvBaiHatYeuThich = findViewById(R.id.lvBaiHatYeuThich);
+        dsBaiHatYeuThich = new ArrayList<>();
+        adapterBaiHatYeuThich = new AdapterBaiHat(MainActivity.this, R.layout.item_bai_hat, dsBaiHatYeuThich);
+        lvBaiHatYeuThich.setAdapter(adapterBaiHatYeuThich);
     }
 
-    // Xử lý sự kiện khi chuyển qua lại giữa các Tab Danh sách và Yêu Thích
-    // (Handle event when switching between "List" and "Favorite" Tabs)
+    private void loadData() {
+        // Load toàn bộ bài hát cho tab danh sách và ban đầu cho tab tìm kiếm
+        loadToanBoBaiHat();
+        // Load danh sách yêu thích
+        loadBaiHatYeuThich();
+    }
+
+    private void loadToanBoBaiHat() {
+        dsToanBoBaiHat.clear();
+        // Ban đầu tab tìm kiếm cũng hiển thị toàn bộ
+        dsBaiHatTimKiem.clear();
+
+        Cursor cursor = database.query("ArirangSongBook", null, null, null, null, null, "MABH ASC");
+        while (cursor.moveToNext()) {
+            String maBH = cursor.getString(0);
+            String tenBH = cursor.getString(1);
+            String loiBH = cursor.getString(2); // Lấy cả lời bài hát để truyền đi
+            String tacGia = cursor.getString(3);
+            int yeuThichInt = cursor.getInt(4);
+            BaiHat baiHat = new BaiHat(maBH, tenBH, loiBH, tacGia, yeuThichInt == 1);
+            dsToanBoBaiHat.add(baiHat);
+            dsBaiHatTimKiem.add(baiHat); // Thêm vào ds tìm kiếm ban đầu
+        }
+        cursor.close();
+        adapterToanBoBaiHat.notifyDataSetChanged();
+        adapterBaiHatTimKiem.notifyDataSetChanged(); // Cập nhật adapter tìm kiếm
+    }
+
+    private void loadBaiHatYeuThich() {
+        dsBaiHatYeuThich.clear();
+        Cursor cursor = database.query("ArirangSongBook", null, "YEUTHICH=?", new String[]{"1"}, null, null, "MABH ASC");
+        while (cursor.moveToNext()) {
+            String maBH = cursor.getString(0);
+            String tenBH = cursor.getString(1);
+            String loiBH = cursor.getString(2);
+            String tacGia = cursor.getString(3);
+            BaiHat baiHat = new BaiHat(maBH, tenBH, loiBH, tacGia, true);
+            dsBaiHatYeuThich.add(baiHat);
+        }
+        cursor.close();
+        adapterBaiHatYeuThich.notifyDataSetChanged();
+    }
+
     private void addEvents() {
-        // TODO Auto-generated method stub
-        tab.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                // TODO Auto-generated method stub
-                if (tabId.equalsIgnoreCase("t2")) {
-                    addDanhsach();
-                }
-                if (tabId.equalsIgnoreCase("t3")) {
-                    addYeuThich();
+                if (tabId.equalsIgnoreCase("t1")) { // Tab Tìm kiếm
+                    // Không cần load lại gì đặc biệt, việc tìm kiếm xử lý qua EditText
+                } else if (tabId.equalsIgnoreCase("t2")) { // Tab Danh sách
+                    loadToanBoBaiHat(); // Load lại toàn bộ nếu cần
+                } else if (tabId.equalsIgnoreCase("t3")) { // Tab Yêu thích
+                    loadBaiHatYeuThich();
                 }
             }
         });
 
-        // Xử lý sự kiện khi Click vào Button xóa trên Tab Tìm kiếm
-        // (Handle event when clicking "Clear" Button on "Search" Tab)
-        btnxoa.setOnClickListener(new View.OnClickListener() {
+        edtTimKiem.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                edttim.setText("");
-            }
-        });
-    }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-    // Hàm thêm bài hát vào Listview trên Tab Yêu thích
-    // (Method to add songs to Listview on "Favorite" Tab)
-    private void addYeuThich() {
-        myarray3.clear(); // Clear the adapter before adding new data
-        list3.clear();    // Clear the list backing the adapter
-        Cursor c = database.rawQuery("SELECT * FROM AriRangSongList WHERE YEUTHICH = 1", null);
-        if (c != null && c.moveToFirst()) {
-            do {
-                list3.add(new Item(
-                        c.getString(1), // TENBH
-                        c.getString(2), // LOIBAIHAT
-                        c.getInt(4)     // YEUTHICH
-                ));
-            } while (c.moveToNext());
-        }
-        if (c != null) {
-            c.close();
-        }
-        myarray3.notifyDataSetChanged();
-    }
-
-    // Hàm thêm bài hát vào Listview trên Tab Danh sách bài hát
-    // (Method to add songs to Listview on "Song List" Tab)
-    private void addDanhsach() {
-        myarray2.clear(); // Clear the adapter before adding new data
-        list2.clear();    // Clear the list backing the adapter
-        Cursor c = database.rawQuery("SELECT * FROM AriRangSongList", null);
-        if (c != null && c.moveToFirst()) {
-            do {
-                list2.add(new Item(
-                        c.getString(1), // TENBH
-                        c.getString(2), // LOIBAIHAT
-                        c.getInt(4)     // YEUTHICH
-                ));
-            } while (c.moveToNext());
-        }
-        if (c != null) {
-            c.close();
-        }
-        myarray2.notifyDataSetChanged();
-    }
-
-    // Hàm xử lý tìm kiếm bài hát theo Tiêu đề và Mã số
-    // (Method to handle searching songs by Title and ID)
-    private void addTim() {
-        // TODO Auto-generated method stub
-        // Sự kiện khi thay đổi text trong Edittext edttim
-        // (Event when text changes in EditText edttim)
-        edttim.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                getdata();
+                xuLyTimKiem(s.toString());
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            private void
-            getdata() {
-                // TODO Auto-generated method stub
-                String dulieunhap = edttim.getText().toString();
-                myarray1.clear(); // Clear the adapter for search results
-                list1.clear(); // Clear the list backing the adapter for search results
-
-                if (dulieunhap.equals("")) {
-                    // If search box is empty, don't show any results (or could display all)
-                    // In this case, it clears the list and notifies.
-                    myarray1.notifyDataSetChanged();
-                    return;
-                }
-
-                Cursor c = database.rawQuery("SELECT * FROM AriRangSongList WHERE TENBH LIKE '%" + dulieunhap + "%' OR MABH LIKE '%" + dulieunhap + "%'", null);
-                c.moveToFirst();
-                while (!c.isAfterLast()) {
-                    list1.add(new Item(c.getString(1), c.getString(2), c.getInt(6))); // Assuming column indices for maso, tieude, thich
-                    c.moveToNext();
-                }
-                c.close();
-                myarray1.notifyDataSetChanged();
-            }
+            public void afterTextChanged(Editable s) {}
         });
+
+        // Sự kiện click item cho cả 3 ListView
+        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BaiHat baiHatDuocChon = null;
+                if (parent.getId() == R.id.lvBaiHatTimKiem) {
+                    baiHatDuocChon = adapterBaiHatTimKiem.getItem(position);
+                } else if (parent.getId() == R.id.lvToanBoBaiHat) {
+                    baiHatDuocChon = adapterToanBoBaiHat.getItem(position);
+                } else if (parent.getId() == R.id.lvBaiHatYeuThich) {
+                    baiHatDuocChon = adapterBaiHatYeuThich.getItem(position);
+                }
+
+                if (baiHatDuocChon != null) {
+                    Intent intent = new Intent(MainActivity.this, SubActivity.class);
+                    intent.putExtra("MABH_CHON", baiHatDuocChon.getMaBH());
+                    startActivityForResult(intent, 100); // Dùng startActivityForResult để cập nhật nếu trạng thái like thay đổi
+                }
+            }
+        };
+
+        lvBaiHatTimKiem.setOnItemClickListener(itemClickListener);
+        lvToanBoBaiHat.setOnItemClickListener(itemClickListener);
+        lvBaiHatYeuThich.setOnItemClickListener(itemClickListener);
     }
 
-    // Hàm xử lý Copy CS dữ liệu từ thư mục assets vào hệ thống thư mục cài đặt
-    // (Method to handle copying DB from assets folder to installation directory)
-    private void copyProcess() {
-        //private app
+    private void xuLyTimKiem(String query) {
+        dsBaiHatTimKiem.clear();
+        if (query.isEmpty()) {
+            // Nếu query rỗng, có thể hiển thị lại toàn bộ danh sách hoặc để trống
+            // Theo PDF thì khi search sẽ lọc từ ds gốc, ở đây tôi sẽ lọc từ CSDL
+            Cursor cursor = database.query("ArirangSongBook", null, null, null, null, null, "MABH ASC");
+            while (cursor.moveToNext()) {
+                String maBH = cursor.getString(0);
+                String tenBH = cursor.getString(1);
+                String loiBH = cursor.getString(2);
+                String tacGia = cursor.getString(3);
+                int yeuThichInt = cursor.getInt(4);
+                dsBaiHatTimKiem.add(new BaiHat(maBH, tenBH, loiBH, tacGia, yeuThichInt == 1));
+            }
+            cursor.close();
+
+        } else {
+            // Thực hiện truy vấn CSDL với điều kiện LIKE
+            // Chuyển query và TENBH về chữ thường để tìm kiếm không phân biệt hoa thường
+            String selection = "lower(TENBH) LIKE ?";
+            String[] selectionArgs = new String[]{"%" + query.toLowerCase(Locale.getDefault()) + "%"};
+            Cursor cursor = database.query("ArirangSongBook", null, selection, selectionArgs, null, null, "MABH ASC");
+            while (cursor.moveToNext()) {
+                String maBH = cursor.getString(0);
+                String tenBH = cursor.getString(1);
+                String loiBH = cursor.getString(2);
+                String tacGia = cursor.getString(3);
+                int yeuThichInt = cursor.getInt(4);
+                dsBaiHatTimKiem.add(new BaiHat(maBH, tenBH, loiBH, tacGia, yeuThichInt == 1));
+            }
+            cursor.close();
+        }
+        adapterBaiHatTimKiem.notifyDataSetChanged();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            // Trạng thái yêu thích có thể đã thay đổi trong SubActivity
+            // Load lại dữ liệu cho các tab để đảm bảo tính nhất quán
+            loadToanBoBaiHat();
+            loadBaiHatYeuThich();
+            // Nếu đang ở tab tìm kiếm, có thể cần cập nhật lại kết quả tìm kiếm
+            // hoặc đơn giản là gọi lại hàm tìm kiếm với query hiện tại
+            if(edtTimKiem.getText().length() > 0){
+                xuLyTimKiem(edtTimKiem.getText().toString());
+            }
+        }
+    }
+
+
+    // Phương thức này được gọi từ Adapter hoặc SubActivity để cập nhật trạng thái
+    // (Theo PDF, các hàm này nằm trong MainActivity)
+    // Tuy nhiên, việc gọi trực tiếp từ Adapter vào MainActivity không phải là cách tốt nhất.
+    // Tốt hơn là dùng interface callback. Nhưng ở đây tôi làm theo hướng dẫn của PDF.
+
+    public void capNhatLaiDanhSachYeuThichKhiThaoTac() {
+        // Được gọi khi có thay đổi trạng thái like/unlike từ adapter hoặc subactivity
+        // để cập nhật lại danh sách ở tab YeuThich nếu đang mở tab đó
+        if (tabHost.getCurrentTabTag() != null && tabHost.getCurrentTabTag().equalsIgnoreCase("t3")) {
+            loadBaiHatYeuThich();
+        }
+        // Cập nhật lại trạng thái trong dsToanBoBaiHat và dsBaiHatTimKiem
+        // Cách đơn giản là load lại, hoặc tìm và cập nhật item
+        loadToanBoBaiHat(); // Tải lại để đồng bộ trạng thái yêu thích
+        if(edtTimKiem.getText().length() > 0) {
+            xuLyTimKiem(edtTimKiem.getText().toString());
+        } else {
+            // Nếu không có query tìm kiếm, dsBaiHatTimKiem đã được cập nhật bởi loadToanBoBaiHat
+            adapterBaiHatTimKiem.notifyDataSetChanged();
+        }
+    }
+
+
+    private void xuLySaoChepCSDLTuAssetsVaoHeThong() {
         File dbFile = getDatabasePath(DATABASE_NAME);
         if (!dbFile.exists()) {
             try {
-                CopyDataBaseFromAsset();
-                Toast.makeText(this, "Copying success from assets folder", Toast.LENGTH_LONG).show();
+                saoChepCSDLTuAssets();
+                Toast.makeText(this, "Sao chép CSDL thành công!", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Lỗi sao chép CSDL: " + e.toString(), Toast.LENGTH_LONG).show();
+                Log.e("DB_COPY_ERROR", "Lỗi sao chép CSDL: ", e);
             }
         }
     }
 
-    public String getMyDatabasePath(String databaseName) {
-        return getApplicationInfo().dataDir + DB_PATH_SUFFIX + databaseName;
+    private void saoChepCSDLTuAssets() {
+        try {
+            InputStream myInput = getAssets().open(DATABASE_NAME);
+            String outFileName = layDuongDanLuuTruCSDL();
+            File f = new File(getApplicationInfo().dataDir + DB_PATH_SUFFIX);
+            if (!f.exists()) {
+                f.mkdir();
+            }
+            OutputStream myOutput = new FileOutputStream(outFileName);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (Exception ex) {
+            Log.e("LOI_SAO_CHEP", ex.toString());
+        }
     }
 
-    public void CopyDataBaseFromAsset() throws IOException {
-        // TODO Auto-generated method stub
-        InputStream myInput = getAssets().open(DATABASE_NAME);
-        // Path to the just created empty db
-        String outFileName = getMyDatabasePath(DATABASE_NAME);
-        // If the path doesn't exist first, create it
-        File f = new File(getApplicationInfo().dataDir + DB_PATH_SUFFIX);
-        if (!f.exists()) {
-            f.mkdir();
-        }
-        // Open the empty db as the output stream
-        OutputStream myOutput = new FileOutputStream(outFileName);
-        //transfer bytes from the inputfile to the outputfile
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer)) > 0) {
-            myOutput.write(buffer, 0, length);
-        }
-        //Close the streams
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
+    private String layDuongDanLuuTruCSDL() {
+        return getApplicationInfo().dataDir + DB_PATH_SUFFIX + DATABASE_NAME;
     }
 }

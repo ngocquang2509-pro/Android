@@ -1,152 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/main"
-android:orientation="vertical"
-tools:context=".MainActivity"
-android:background="#f0f0f0">
 
-<!-- Header with title -->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="#424242"
-    android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
-
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Karaoke Việt Nam"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-</LinearLayout>
-
-<!-- Tab Host Container -->
-<TabHost
-    android:id="@+id/tabhost"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".MainActivity">
 
-        <!-- Tab Widget -->
-        <TabWidget
-            android:id="@android:id/tabs"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:elevation="2dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <!-- Frame Layout for tab content -->
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!-- TAB1 Content -->
-            <LinearLayout
-                android:id="@+id/tab1"
+            <TabWidget
+                android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="wrap_content" />
 
-                <!-- Search bar -->
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Tab 1: Tìm kiếm -->
                 <LinearLayout
+                    android:id="@+id/tab_tim_kiem"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/edtTim"
-                        android:layout_width="0dp"
+                        android:id="@+id/edtTimKiem"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Nhập tên bài hát để tìm..."
+                        android:inputType="text" />
+
+                    <ListView
+                        android:id="@+id/lvBaiHatTimKiem"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@null"
-                        android:hint="Nhập Tên hoặc Mã bài hát"
-                        android:textSize="14sp"
-                        android:textColor="#333333"
-                        android:textColorHint="#888888" />
-
-                    <ImageButton
-                        android:id="@+id/btnXoa"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                    />
-
+                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
 
-                <!-- List View -->
-                <ListView
-                    android:id="@+id/lv1"
+                <!-- Tab 2: Danh sách -->
+                <LinearLayout
+                    android:id="@+id/tab_danh_sach"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="#e0e0e0"
-                    android:dividerHeight="1dp"
-                    android:scrollbars="vertical" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-            </LinearLayout>
+                    <ListView
+                        android:id="@+id/lvToanBoBaiHat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
 
-            <!-- TAB2 Content -->
-            <LinearLayout
-                android:id="@+id/tab2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <ListView
-                    android:id="@+id/lv2"
+                <!-- Tab 3: Yêu thích -->
+                <LinearLayout
+                    android:id="@+id/tab_yeu_thich"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="#e0e0e0"
-                    android:dividerHeight="1dp"
-                    android:scrollbars="vertical" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-            </LinearLayout>
+                    <ListView
+                        android:id="@+id/lvBaiHatYeuThich"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
 
-            <!-- TAB3 Content -->
-            <LinearLayout
-                android:id="@+id/tab3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <ListView
-                    android:id="@+id/lv3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="#e0e0e0"
-                    android:dividerHeight="1dp"
-                    android:scrollbars="vertical" />
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-</TabHost>
-
-</LinearLayout>

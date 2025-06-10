@@ -1,123 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/main"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:padding="16dp"
-tools:context=".ActivitySub" >
-
-<!-- Tiêu đề -->
-<TextView
-    android:id="@+id/tvTitle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Karaoke Việt Nam"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:paddingBottom="16dp" />
-
-<!-- TableLayout để hiển thị thông tin bài hát -->
-<TableLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:stretchColumns="1">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubActivity">
+    <TextView
+        android:id="@+id/txtMaSoChiTiet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FF0000"/>
 
-    <!-- Mã số -->
-    <TableRow>
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="#"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/txtmaso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mã số"
-            android:textSize="18sp" />
-    </TableRow>
+    <TextView
+        android:id="@+id/txtTenBaiHatChiTiet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Tên bài hát -->
-    <TableRow>
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên bài hát:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/txtbaihat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CHÉN ĐÁNG (REMIX)"
-            android:textSize="18sp" />
-    </TableRow>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lời bài hát:"
+        android:textStyle="italic"
+        android:layout_marginTop="16dp"/>
 
-    <!-- Lời bài hát -->
-    <TableRow>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:background="#F0F0F0"
+        android:padding="8dp">
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lời bài hát:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/txtloibaihat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Một ngày anh nhớ, nhớ bóng hình em, trái tim..."
-            android:textSize="18sp" />
-    </TableRow>
+            android:id="@+id/txtLoiBaiHatChiTiet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
 
-    <!-- Tác giả -->
-    <TableRow>
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tác giả:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/txttacgia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trương Lê Sơn"
-            android:textSize="18sp" />
-    </TableRow>
+    <TextView
+        android:id="@+id/txtTacGiaChiTiet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Yêu thích -->
-    <TableRow>
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yêu thích:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- Nút yêu thích -->
-            <ImageButton
-                android:id="@+id/btnthich"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Yêu thích" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal">
 
-            <!-- Nút không thích -->
-            <ImageButton
-                android:id="@+id/btnkhongthich"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Không thích" />
-        </LinearLayout>
-    </TableRow>
-</TableLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yêu thích: "
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/btnUnlikeSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_unlike"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Chưa thích"
+            android:padding="8dp"/>
+
+        <ImageButton
+            android:id="@+id/btnLikeSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_like"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Đã thích"
+            android:visibility="gone"
+            android:padding="8dp"/>
+    </LinearLayout>
 </LinearLayout>
